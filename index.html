@@ -1,0 +1,67 @@
+<!doctype html>
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <title>zip code demo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="shortcut icon" href="/favicon.ico">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- endbuild -->
+
+        <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+    </head>
+    <body>
+        <!--[if lt IE 10]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+
+        <div id="map"></div>
+
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        
+        <script src="http://js.arcgis.com/3.9/"></script>
+
+        <script type="text/javascript">
+          var map;
+          require(["esri/map", "esri/geometry/Extent", "esri/layers/FeatureLayer", "dojo/domReady!"], function(Map, Extent, FeatureLayer) { 
+            var bounds = new Extent({"xmin":-14108440.93,"ymin":2802457.61,"xmax":-7064004.4,"ymax":6632869.97,"spatialReference":{"wkid":102100}});
+            map = new Map("map", {
+              extent: bounds,
+              basemap: "streets"
+            });
+
+            var fl = new FeatureLayer("http://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_ZIP_Codes/FeatureServer/0", {
+              maxAllowableOffset: window.map.extent.getWidth() / window.map.width,
+              mode: FeatureLayer.MODE_SNAPSHOT,
+              visible: true
+            });
+
+            fl.on('load', function () {
+              fl.minScale = 0;
+              fl.maxScale = 0;
+              map.addLayer(fl);
+            });
+
+          });
+        </script>
+
+        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
