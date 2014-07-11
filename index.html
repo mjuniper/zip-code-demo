@@ -23,9 +23,8 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-
         <div id="map"></div>
-
+        <div id="info"><h1></h1></div>
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
@@ -38,7 +37,7 @@
 
         <script type="text/javascript">
           var map;
-          require(["esri/map", "esri/geometry/Extent", "esri/layers/FeatureLayer", "dojo/domReady!"], function(Map, Extent, FeatureLayer) { 
+          require(["esri/map", "esri/geometry/Extent", "esri/layers/FeatureLayer", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/Color", "esri/renderers/SimpleRenderer", "dojo/domReady!"], function(Map, Extent, FeatureLayer, SimpleFillSymbol, SimpleLineSymbol, Color, SimpleRenderer) { 
             var bounds = new Extent({"xmin":-14108440.93,"ymin":2802457.61,"xmax":-7064004.4,"ymax":6632869.97,"spatialReference":{"wkid":102100}});
             map = new Map("map", {
               extent: bounds,
@@ -48,13 +47,23 @@
             var fl = new FeatureLayer("http://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_ZIP_Codes/FeatureServer/0", {
               maxAllowableOffset: window.map.extent.getWidth() / window.map.width,
               mode: FeatureLayer.MODE_SNAPSHOT,
+              outFields: '*',
               visible: true
             });
+
+            var outline = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, Color.named.white, 1);
+            var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, outline, Color.fromHex('#148C05'));
+            var renderer = new SimpleRenderer(symbol);
+            fl.setRenderer(renderer);
 
             fl.on('load', function () {
               fl.minScale = 0;
               fl.maxScale = 0;
               map.addLayer(fl);
+            });
+
+            fl.on('mouse-over', function (e) {
+              document.querySelector('#info h1').innerHTML = 'zipcode: ' + e.graphic.attributes.ZIP;
             });
 
           });
