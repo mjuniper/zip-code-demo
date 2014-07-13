@@ -45,9 +45,15 @@
               basemap: "streets"
             });
 
+            var mode = 'MODE_SNAPSHOT';
+            if (location.search.length > 1 && location.search.indexOf('?mode=') > -1)
+            {
+              mode = 'MODE_' + location.search.replace('?mode=', '');
+            }
+
             var fl = new FeatureLayer("http://services.arcgis.com/P3ePLMYs2RVChkJx/ArcGIS/rest/services/USA_ZIP_Codes/FeatureServer/0", {
               maxAllowableOffset: window.map.extent.getWidth() / window.map.width,
-              mode: FeatureLayer.MODE_SNAPSHOT,
+              mode: FeatureLayer[mode],
               outFields: '*',
               visible: true
             });
